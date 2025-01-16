@@ -12,16 +12,17 @@ vector<PII> segs;
 void merge(vector<PII> & segs){
     vector<PII> res;
     sort(segs.begin(), segs.end());
-    int st = -2e9, ed = -2e9;
-    for(auto seg : segs){
-        if(ed < seg.first){
-            if(st!=-2e9) res.push_back({st, ed});
-            st = seg.first, ed = seg.second;
+    int beg = -2e9, end = -2e9;
+    for(auto p: segs){
+        if(end < p.first){
+            if(beg!=-2e9) res.push_back({beg, end});
+            beg = p.first;
+            end = p.second;
         }else{
-            ed = max(ed, seg.second);
+            end = max(end, p.second);
         }
     }
-    if(st != -2e9) res.push_back({st, ed});
+    if(beg!=-2e9)res.push_back({beg, end});
     segs = res;
 }
 

@@ -3,57 +3,43 @@
 #include <algorithm>
 using namespace std;
 typedef pair<int, int> PII;
+vector<int>all;
+vector<PII>add, query;
 const int N = 300010;
-int n, m;
 int a[N], s[N];
-vector<int> alls;
-vector<PII> add, query;
+int n, m;
 
-int find(int x){
-    int l = 0, r = alls.size()-1;
-    while(l < r){
+int discrete(int x){
+    int l = 0, r = all.size()-1;
+    while(l<r){ // find first >= x
         int mid = l+r>>1;
-        if(alls[mid]>=x)r=  mid;
-        else l = mid+1;
+        if(all[mid] >= x) r = mid;
+        else l = mid+1; 
     }
-    return r+1;// 映射到从1开始的自然数
+    return l+1;
 }
 
-
-
 int main(){
-    cin >>n>>m;
-    for(int i =0; i < n;i++){
-        // 把x离散化
-        int x, c;
-        cin>>x>>c;
-        add.push_back({x, c});
-        alls.push_back(x);
+    scanf("%d%d", &n, &m);
+    for(int i=0; i < n; i++){
+        int x, c; scanf("%d%d",&x,&c);
+        add.push_back({x,c}); 
+        all.push_back(x);
+        }
+    for(int i=0; i<m;i++){
+        int l, r;scanf("%d%d",&l,&r);
+        query.push_back({l,r}); 
+        all.push_back(l); all.push_back(r);
     }
-    for(int i=0;i<m;i++){
-        // 把l，r离散化
-        int l, r;
-        cin>>l>>r;
-        query.push_back({l, r});
-        alls.push_back(l);
-        alls.push_back(r);
-    }
-
     // 去重
-    sort(alls.begin(), alls.end());
-    alls.erase(unique(alls.begin(), alls.end()), alls.end());
-    // 处理插入
-    for(auto item:add){
-        int x = find(item.first);
-        a[x]+=item.second;
+    sort(all.begin(),all.end());
+    all.erase(unique(all.begin(), all.end()), all.end());
+    for(int i = 0; i < add.size(); i++){
+        a[discrete(add[i].first)] += add[i].second;
     }
-    // 处理前缀和
-    for(int i =1; i<=alls.size();i++)s[i] = s[i-1] + a[i];
-    // 处理循环
-    for(auto item:query){
-        int l = find(item.first);
-        int r = find(item.second);
-        cout << s[r] - s[l-1] << endl;
+    for(int i = 1; i < all.size()+1; i++)s[i] = s[i-1] + a[i];
+    for(auto q : query){
+        cout << s[discrete(q.second)] - s[discrete(q.first)-1] << endl;
     }
 
     return 0;
