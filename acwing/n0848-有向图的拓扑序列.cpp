@@ -4,10 +4,9 @@
 using namespace std;
 
 const int N = 100010, M = N;
+int h[N], e[M], ne[M], idx;
+int d[N], res[N], ridx;
 int m, n;
-int h[N], e[M], ne[M], idx = 0;
-int d[N], res[N], ridx = 0;
-
 
 void add(int a, int b){
     e[idx] = b;
@@ -16,25 +15,22 @@ void add(int a, int b){
     idx++;
 }
 
-bool topSort(){
-    int cnt = 0;
+void topSort(){
     queue<int> q;
-    for(int i = 1; i <= n; i++)
-        if(d[i] == 0) {q.push(i); cnt++; res[ridx++] = i;}
-
-    while(!q.empty()){
-        int a = q.front(); q.pop();
-        for(int i = h[a]; i != -1; i = ne[i]){
+    for(int i = 1; i <= n; i++) if(d[i] == 0) {q.push(i); res[ridx++] = i;}
+    while(q.size()){
+        int next = q.front(); q.pop();
+        for(int i = h[next]; i != -1; i = ne[i]){
             int b = e[i];
             d[b] --;
             if(d[b] == 0){
                 q.push(b);
-                cnt ++;
                 res[ridx++] = b;
             }
         }
     }
-    return cnt == n;
+    
+    return ;
 }
 
 int main(){
@@ -46,13 +42,12 @@ int main(){
         add(a, b);
         d[b]++;
     }
-
-    if(topSort()){
+    topSort();
+    if(ridx == n){
         for(int i = 0; i < n; i++){
             printf("%d ", res[i]);
         }
-    }else{
-        printf("-1");
-    }
+    }else printf("-1");
+    
     return 0;
 }
