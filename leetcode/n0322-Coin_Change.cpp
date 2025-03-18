@@ -9,10 +9,10 @@ public:
         for(int i = 0; i < coins.size(); i++){
             for(int j = coins[i]; j <= amount; j++){
                 if(f[j - coins[i]] != INT_MAX)
-                    f[j] = min(f[j], f[j-coins[i]] + 1);
+                    f[j] = min(f[j], f[j - coins[i]] + 1);
             }
         }
         if(f[amount] == INT_MAX) return -1;
-        else return f[amount];
+        return f[amount];
     }
 };
